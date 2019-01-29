@@ -21,7 +21,7 @@
         <version.libphonenumber>8.10.4</version.libphonenumber>
         <version.aws-java-sdk-sns>1.11.173</version.aws-java-sdk-sns>
         <version.commons-lang>2.6</version.commons-lang>
-        <version.picketbox>5.0.2.Final</version.picketbox>
+        <version.picketbox>5.1.0.Final</version.picketbox>
         <version.notify-client>3.13.0-RELEASE</version.notify-client>
     </properties>
     <build>
