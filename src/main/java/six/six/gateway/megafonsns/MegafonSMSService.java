@@ -40,7 +40,7 @@ public class MegafonSMSService implements SMSService {
         boolean result = false;
 
         String formattedPhoneNumberForMegafon = verifyPhoneNumberForMegafon(phoneNumber);
-        if (isNotExistRequiredAttributes(formattedPhoneNumberForMegafon, this.baseUrl, login, pw)) {
+        if (isNotExistRequiredAttributes(formattedPhoneNumberForMegafon, message, login, pw)) {
             logger.error("One of the required attributes is missing!");
             return false;
         }
@@ -68,11 +68,11 @@ public class MegafonSMSService implements SMSService {
         return result;
     }
 
-    private boolean isNotExistRequiredAttributes(String formattedPhoneNumberForMegafon, String baseUrl,
+    private boolean isNotExistRequiredAttributes(String formattedPhoneNumberForMegafon, String message,
                                                  String login, String pw) {
 
-        return Objects.isNull(formattedPhoneNumberForMegafon) || Objects.isNull(baseUrl)
-                || Objects.isNull(login) || Objects.isNull(pw);
+        return Objects.isNull(formattedPhoneNumberForMegafon) || Objects.isNull(message)
+                || Objects.isNull(login) || Objects.isNull(pw) || Objects.isNull(this.baseUrl);
     }
 
     private String verifyPhoneNumberForMegafon(String phoneNumber) {
@@ -98,12 +98,8 @@ public class MegafonSMSService implements SMSService {
         jsonObject.put("messageTypeId", MESSAGE_TYPE_ID);
         jsonObject.put("channelCode", CHANNEL_CODE);
         jsonObject.put("operatorAddress", OPERATOR_ADDRESS);
-        if (Objects.nonNull(phoneNumber) && !phoneNumber.isEmpty()) {
-            jsonObject.put("recipientAddress", phoneNumber);
-        }
-        if (Objects.nonNull(message) && !message.isEmpty()) {
-            jsonObject.put("messageText", message);
-        }
+        jsonObject.put("recipientAddress", phoneNumber);
+        jsonObject.put("messageText", message);
 
         return jsonObject;
     }
