@@ -32,7 +32,7 @@ public class KeycloakSmsAuthenticatorFactory implements AuthenticatorFactory, Co
 
     public static final AuthenticationExecutionModel.Requirement[] REQUIREMENT_CHOICES = {
             AuthenticationExecutionModel.Requirement.REQUIRED,
-            AuthenticationExecutionModel.Requirement.OPTIONAL,
+            AuthenticationExecutionModel.Requirement.ALTERNATIVE,
             AuthenticationExecutionModel.Requirement.DISABLED};
 
     private static final List<ProviderConfigProperty> configProperties = new ArrayList<ProviderConfigProperty>();
@@ -74,7 +74,7 @@ public class KeycloakSmsAuthenticatorFactory implements AuthenticatorFactory, Co
         property.setName(KeycloakSmsConstants.CONF_PRP_SMS_GATEWAY_ENDPOINT);
         property.setLabel("SMS endpoint");
         property.setType(ProviderConfigProperty.STRING_TYPE);
-        property.setHelpText("Only used for LyraSMS");
+        property.setHelpText("Only used for LyraSMS and MegafonCNC");
         configProperties.add(property);
 
         // Credential
@@ -82,13 +82,13 @@ public class KeycloakSmsAuthenticatorFactory implements AuthenticatorFactory, Co
         property.setName(KeycloakSmsConstants.CONF_PRP_SMS_CLIENTTOKEN);
         property.setLabel("Client id");
         property.setType(ProviderConfigProperty.STRING_TYPE);
-        property.setHelpText("AWS Client Token or LyraSMS User. Not used for GOV.UK Notify");
+        property.setHelpText("AWS Client Token or LyraSMS User or MegafonCNC LOGIN. Not used for GOV.UK Notify");
         configProperties.add(property);
 
         property = new ProviderConfigProperty();
         property.setName(KeycloakSmsConstants.CONF_PRP_SMS_CLIENTSECRET);
         property.setLabel("Client secret");
-        property.setHelpText("AWS Client Secret or LyraSMS Password. Not used for GOV.UK Notify");
+        property.setHelpText("AWS Client Secret or LyraSMS Password or MegafonCNC APPL_CODE. Not used for GOV.UK Notify");
         property.setType(ProviderConfigProperty.STRING_TYPE);
         configProperties.add(property);
 
