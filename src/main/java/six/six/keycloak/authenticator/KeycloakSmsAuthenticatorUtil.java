@@ -17,6 +17,7 @@ import six.six.gateway.SMSService;
 import six.six.gateway.aws.snsclient.SnsNotificationService;
 import six.six.gateway.govuk.notify.NotifySMSService;
 import six.six.gateway.lyrasms.LyraSMSService;
+import six.six.gateway.megafonsns.MegafonSMSService;
 import six.six.keycloak.EnvSubstitutor;
 import six.six.keycloak.KeycloakSmsConstants;
 
@@ -195,6 +196,9 @@ public class KeycloakSmsAuthenticatorUtil {
                     break;
                 case GOVUK_NOTIFY:
                     smsService = new NotifySMSService(notifyApiKey, notifyTemplate);
+                    break;
+                case MEGAFON_CNC:
+                    smsService = new MegafonSMSService(endpoint);
                     break;
                 default:
                     smsService = new SnsNotificationService();
