@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" version="4">
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
@@ -10,38 +10,16 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.keycloak:keycloak-core:4.3.0.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.keycloak:keycloak-common:4.3.0.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.bouncycastle:bcprov-jdk15on:1.56" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.bouncycastle:bcpkix-jdk15on:1.56" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.8.11" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.11.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.keycloak:keycloak-server-spi:4.3.0.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.keycloak:keycloak-server-spi-private:4.3.0.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.logging:jboss-logging:3.3.1.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.keycloak:keycloak-services:4.3.0.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: javax.mail:javax.mail-api:1.5.6" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.glassfish:javax.json:1.0.4" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.spec.javax.servlet:jboss-servlet-api_3.0_spec:1.0.2.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.resteasy:resteasy-jaxrs:3.0.24.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: javax.activation:activation:1.1.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.0_spec:1.0.0.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.spec.javax.transaction:jboss-transaction-api_1.2_spec:1.0.1.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.resteasy:resteasy-multipart-provider:3.0.24.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.resteasy:resteasy-client:3.0.24.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.resteasy:resteasy-jaxb-provider:3.0.24.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.8.11" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.keycloak:keycloak-core:4.8.2.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.keycloak:keycloak-common:4.8.2.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.keycloak:keycloak-core:4.8.3.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.keycloak:keycloak-common:4.8.3.Final" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.bouncycastle:bcprov-jdk15on:1.60" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.bouncycastle:bcpkix-jdk15on:1.60" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.5" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.5" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.keycloak:keycloak-server-spi:4.8.2.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.keycloak:keycloak-server-spi-private:4.8.2.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.logging:jboss-logging:3.3.2.Final" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.keycloak:keycloak-services:4.8.2.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.keycloak:keycloak-server-spi:4.8.3.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.keycloak:keycloak-server-spi-private:4.8.3.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jboss.logging:jboss-logging:3.4.0.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.keycloak:keycloak-services:4.8.3.Final" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.mail:javax.mail-api:1.6.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.activation:activation:1.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.glassfish:javax.json:1.1.2" level="project" />
@@ -80,25 +58,25 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.6.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:slf4j-log4j12:1.6.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: log4j:log4j:1.2.16" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.httpcomponents:httpclient:4.5.5" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.httpcomponents:httpcore:4.4.9" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.httpcomponents:httpclient:4.5.8" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.httpcomponents:httpcore:4.4.11" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: commons-codec:commons-codec:1.10" level="project" />
-    <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-sns:1.11.173" level="project" />
-    <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-sqs:1.11.173" level="project" />
-    <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-core:1.11.173" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: commons-codec:commons-codec:1.11" level="project" />
+    <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-sns:1.11.548" level="project" />
+    <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-sqs:1.11.548" level="project" />
+    <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-core:1.11.548" level="project" />
     <orderEntry type="library" name="Maven: software.amazon.ion:ion-java:1.0.2" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.6.7" level="project" />
-    <orderEntry type="library" name="Maven: com.amazonaws:jmespath-java:1.11.173" level="project" />
-    <orderEntry type="library" name="Maven: com.googlecode.libphonenumber:libphonenumber:8.9.0" level="project" />
+    <orderEntry type="library" name="Maven: com.amazonaws:jmespath-java:1.11.548" level="project" />
+    <orderEntry type="library" name="Maven: com.googlecode.libphonenumber:libphonenumber:8.10.13" level="project" />
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: org.picketbox:picketbox:5.0.2.Final" level="project" />
-    <orderEntry type="library" name="Maven: uk.gov.service.notify:notifications-java-client:3.12.0-RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.bitbucket.b_c:jose4j:0.5.5" level="project" />
-    <orderEntry type="library" name="Maven: commons-cli:commons-cli:1.1" level="project" />
-    <orderEntry type="library" name="Maven: org.json:json:20160212" level="project" />
-    <orderEntry type="library" name="Maven: joda-time:joda-time:2.7" level="project" />
-    <orderEntry type="library" name="Maven: commons-io:commons-io:1.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.0" level="project" />
+    <orderEntry type="library" name="Maven: uk.gov.service.notify:notifications-java-client:3.14.2-RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.bitbucket.b_c:jose4j:0.6.5" level="project" />
+    <orderEntry type="library" name="Maven: commons-cli:commons-cli:1.4" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20180813" level="project" />
+    <orderEntry type="library" name="Maven: joda-time:joda-time:2.10.1" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.6" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.8.1" level="project" />
   </component>
 </module>
