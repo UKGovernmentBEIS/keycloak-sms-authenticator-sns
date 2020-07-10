@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <version.keycloak>4.8.3.Final</version.keycloak>
-        <version.wildfly>14.0.1.Final</version.wildfly>
+        <version.wildfly>20.0.1.Final</version.wildfly>
         <version.httpclient>4.5.8</version.httpclient>
         <version.jboss-logging>3.4.0.Final</version.jboss-logging>
         <version.libphonenumber>8.10.13</version.libphonenumber>
