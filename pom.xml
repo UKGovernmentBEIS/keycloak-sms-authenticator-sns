@@ -14,7 +14,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <version.keycloak>4.8.3.Final</version.keycloak>
+        <version.keycloak>11.0.2</version.keycloak>
         <version.wildfly>14.0.1.Final</version.wildfly>
         <version.httpclient>4.5.8</version.httpclient>
         <version.jboss-logging>3.4.0.Final</version.jboss-logging>
