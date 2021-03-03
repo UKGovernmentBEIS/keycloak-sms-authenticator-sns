@@ -107,4 +107,44 @@ public class KeycloakSmsMobilenumberCredentialProvider implements CredentialProv
         List<CredentialModel> creds = session.userCredentialManager().getStoredCredentialsByType(realm, user, MOBILE_NUMBER);
         if (!creds.isEmpty()) user.getCachedWith().put(CACHE_KEY, creds.get(0));
     }
+
+    private UserCredentialStore getCredentialStore() {
+        return this.session.userCredentialManager();
+    }
+
+    @Override
+    public String getType() {
+        return MOBILE_NUMBER;
+    }
+
+    @Override
+    public CredentialModel createCredential(RealmModel realm, UserModel user, CredentialModel credentialModel) {
+        if (credentialModel.getCreatedDate() == null) {
+            credentialModel.setCreatedDate(Time.currentTimeMillis());
+        }
+        return this.getCredentialStore().createCredential(realm, user, credentialModel);
+
+    }
+
+    @Override
+    public boolean deleteCredential(RealmModel realm, UserModel user, String credentialId) {
+        return this.getCredentialStore().removeStoredCredential(realm, user, credentialId);
+    }
+
+    @Override
+    public CredentialModel getCredentialFromModel(CredentialModel credentialModel) {
+        return credentialModel;
+    }
+
+    @Override
+    public CredentialTypeMetadata getCredentialTypeMetadata(CredentialTypeMetadataContext credentialTypeMetadataContext) {
+        return CredentialTypeMetadata.builder()
+                .type(this.getType())
+                .category(CredentialTypeMetadata.Category.TWO_FACTOR)
+                .displayName("otp-display-name")
+                .helpText("otp-help-text")
+                .iconCssClass("kcAuthenticatorOTPClass")
+                .removeable(true)
+                .build(this.session);
+    }
 }

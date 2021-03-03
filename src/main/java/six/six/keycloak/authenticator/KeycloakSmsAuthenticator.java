@@ -5,12 +5,7 @@ import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.credential.CredentialModel;
-import org.keycloak.models.AuthenticationExecutionModel;
-import org.keycloak.models.AuthenticatorConfigModel;
-import org.keycloak.models.KeycloakSession;
-import org.keycloak.models.RealmModel;
-import org.keycloak.models.UserCredentialModel;
-import org.keycloak.models.UserModel;
+import org.keycloak.models.*;
 import six.six.keycloak.KeycloakSmsConstants;
 import six.six.keycloak.MobileNumberHelper;
 import six.six.keycloak.requiredaction.action.required.KeycloakSmsMobilenumberRequiredAction;
@@ -56,93 +51,100 @@ public class KeycloakSmsAuthenticator implements Authenticator {
 
     @Override
     public void authenticate(AuthenticationFlowContext context) {
-        logger.debug("authenticate called ... context = " + context);
-        UserModel user = context.getUser();
-        AuthenticatorConfigModel config = context.getAuthenticatorConfig();
+        logger.info("authenticate called ... context = " + context);
+        try {
+            UserModel user = context.getUser();
+            AuthenticatorConfigModel config = context.getAuthenticatorConfig();
 
-        boolean onlyForVerification=KeycloakSmsAuthenticatorUtil.getConfigBoolean(config, KeycloakSmsConstants.MOBILE_VERIFICATION_ENABLED);
+            boolean onlyForVerification = KeycloakSmsAuthenticatorUtil.getConfigBoolean(config, KeycloakSmsConstants.MOBILE_VERIFICATION_ENABLED);
 
-        String mobileNumber =getMobileNumber(user);
-        String mobileNumberVerified = getMobileNumberVerified(user);
+            String mobileNumber = getMobileNumber(user);
+            String mobileNumberVerified = getMobileNumberVerified(user);
 
-        if (onlyForVerification==false || isOnlyForVerificationMode(onlyForVerification, mobileNumber,mobileNumberVerified)){
-            if (mobileNumber != null) {
-                // The mobile number is configured --> send an SMS
-                long nrOfDigits = KeycloakSmsAuthenticatorUtil.getConfigLong(config, KeycloakSmsConstants.CONF_PRP_SMS_CODE_LENGTH, 8L);
-                logger.debug("Using nrOfDigits " + nrOfDigits);
+            if (onlyForVerification == false || isOnlyForVerificationMode(onlyForVerification, mobileNumber, mobileNumberVerified)) {
+                if (mobileNumber != null) {
+                    // The mobile number is configured --> send an SMS
+                    long nrOfDigits = KeycloakSmsAuthenticatorUtil.getConfigLong(config, KeycloakSmsConstants.CONF_PRP_SMS_CODE_LENGTH, 8L);
+                    logger.debug("Using nrOfDigits " + nrOfDigits);
 
 
-                long ttl = KeycloakSmsAuthenticatorUtil.getConfigLong(config, KeycloakSmsConstants.CONF_PRP_SMS_CODE_TTL, 10 * 60L); // 10 minutes in s
+                    long ttl = KeycloakSmsAuthenticatorUtil.getConfigLong(config, KeycloakSmsConstants.CONF_PRP_SMS_CODE_TTL, 10 * 60L); // 10 minutes in s
 
-                logger.debug("Using ttl " + ttl + " (s)");
+                    logger.debug("Using ttl " + ttl + " (s)");
 
-                String code = KeycloakSmsAuthenticatorUtil.getSmsCode(nrOfDigits);
+                    String code = KeycloakSmsAuthenticatorUtil.getSmsCode(nrOfDigits);
 
-                storeSMSCode(context, code, new Date().getTime() + (ttl * 1000)); // s --> ms
-                if (KeycloakSmsAuthenticatorUtil.sendSmsCode(mobileNumber, code, context)) {
-                    Response challenge = context.form().createForm("sms-validation.ftl");
-                    context.challenge(challenge);
+                    storeSMSCode(context, code, new Date().getTime() + (ttl * 1000)); // s --> ms
+                    if (KeycloakSmsAuthenticatorUtil.sendSmsCode(mobileNumber, code, context)) {
+                        Response challenge = context.form().createForm("sms-validation.ftl");
+                        context.challenge(challenge);
+                    } else {
+                        Response challenge = context.form()
+                                .setError("sms-auth.not.send")
+                                .createForm("sms-validation-error.ftl");
+                        context.failureChallenge(AuthenticationFlowError.INTERNAL_ERROR, challenge);
+                    }
                 } else {
-                    Response challenge = context.form()
-                            .setError("sms-auth.not.send")
-                            .createForm("sms-validation-error.ftl");
-                    context.failureChallenge(AuthenticationFlowError.INTERNAL_ERROR, challenge);
+                    boolean isAskingFor = KeycloakSmsAuthenticatorUtil.getConfigBoolean(config, KeycloakSmsConstants.MOBILE_ASKFOR_ENABLED);
+                    if (isAskingFor) {
+                        //Enable access and ask for mobilenumber
+                        user.addRequiredAction(KeycloakSmsMobilenumberRequiredAction.PROVIDER_ID);
+                        context.success();
+                    } else {
+                        // The mobile number is NOT configured --> complain
+                        Response challenge = context.form()
+                                .setError("sms-auth.not.mobile")
+                                .createForm("sms-validation-error.ftl");
+                        context.failureChallenge(AuthenticationFlowError.CLIENT_CREDENTIALS_SETUP_REQUIRED, challenge);
+                    }
                 }
             } else {
-                boolean isAskingFor=KeycloakSmsAuthenticatorUtil.getConfigBoolean(config, KeycloakSmsConstants.MOBILE_ASKFOR_ENABLED);
-                if(isAskingFor){
-                    //Enable access and ask for mobilenumber
-                    user.addRequiredAction(KeycloakSmsMobilenumberRequiredAction.PROVIDER_ID);
-                    context.success();
-                }else {
-                    // The mobile number is NOT configured --> complain
-                    Response challenge = context.form()
-                            .setError("sms-auth.not.mobile")
-                            .createForm("sms-validation-error.ftl");
-                    context.failureChallenge(AuthenticationFlowError.CLIENT_CREDENTIALS_SETUP_REQUIRED, challenge);
-                }
-            }
-        }else{
-            logger.debug("Skip SMS code because onlyForVerification " + onlyForVerification + " or  mobileNumber==mobileNumberVerified");
-            context.success();
+                logger.debug("Skip SMS code because onlyForVerification " + onlyForVerification + " or  mobileNumber==mobileNumberVerified");
+                context.success();
 
+            }
+        } catch (Exception ex) {
+            logger.errorf(ex, "Error occurs during authenticate method call. %s", ex.getMessage());
         }
     }
 
     @Override
     public void action(AuthenticationFlowContext context) {
-        logger.debug("action called ... context = " + context);
-        CODE_STATUS status = validateCode(context);
-        Response challenge = null;
-        switch (status) {
-            case EXPIRED:
-                challenge = context.form()
-                        .setError("sms-auth.code.expired")
-                        .createForm("sms-validation.ftl");
-                context.failureChallenge(AuthenticationFlowError.EXPIRED_CODE, challenge);
-                break;
-
-            case INVALID:
-                if (context.getExecution().getRequirement() == AuthenticationExecutionModel.Requirement.OPTIONAL ||
-                        context.getExecution().getRequirement() == AuthenticationExecutionModel.Requirement.ALTERNATIVE) {
-                    logger.debug("Calling context.attempted()");
-                    context.attempted();
-                } else if (context.getExecution().getRequirement() == AuthenticationExecutionModel.Requirement.REQUIRED) {
+        logger.info("action called ... context = " + context);
+        try {
+            CODE_STATUS status = validateCode(context);
+            Response challenge = null;
+            switch (status) {
+                case EXPIRED:
                     challenge = context.form()
-                            .setError("sms-auth.code.invalid")
+                            .setError("sms-auth.code.expired")
                             .createForm("sms-validation.ftl");
-                    context.failureChallenge(AuthenticationFlowError.INVALID_CREDENTIALS, challenge);
-                } else {
-                    // Something strange happened
-                    logger.warn("Undefined execution ...");
-                }
-                break;
+                    context.failureChallenge(AuthenticationFlowError.EXPIRED_CODE, challenge);
+                    break;
 
-            case VALID:
-                context.success();
-                updateVerifiedMobilenumber(context);
-                break;
+                case INVALID:
+                    if (context.getExecution().getRequirement() == AuthenticationExecutionModel.Requirement.ALTERNATIVE) {
+                        logger.debug("Calling context.attempted()");
+                        context.attempted();
+                    } else if (context.getExecution().getRequirement() == AuthenticationExecutionModel.Requirement.REQUIRED) {
+                        challenge = context.form()
+                                .setError("sms-auth.code.invalid")
+                                .createForm("sms-validation.ftl");
+                        context.failureChallenge(AuthenticationFlowError.INVALID_CREDENTIALS, challenge);
+                    } else {
+                        // Something strange happened
+                        logger.warn("Undefined execution ...");
+                    }
+                    break;
 
+                case VALID:
+                    context.success();
+                    updateVerifiedMobilenumber(context);
+                    break;
+
+            }
+        } catch (Exception ex) {
+            logger.errorf(ex, "Error occurs during action method call. %s", ex.getMessage());
         }
     }
 
@@ -153,7 +155,7 @@ public class KeycloakSmsAuthenticator implements Authenticator {
     private void updateVerifiedMobilenumber(AuthenticationFlowContext context){
         AuthenticatorConfigModel config = context.getAuthenticatorConfig();
         UserModel user = context.getUser();
-        boolean onlyForVerification=KeycloakSmsAuthenticatorUtil.getConfigBoolean(config, KeycloakSmsConstants.MOBILE_VERIFICATION_ENABLED);
+        boolean onlyForVerification= KeycloakSmsAuthenticatorUtil.getConfigBoolean(config, KeycloakSmsConstants.MOBILE_VERIFICATION_ENABLED);
 
         if(onlyForVerification){
             //Only verification mode
@@ -212,22 +214,22 @@ public class KeycloakSmsAuthenticator implements Authenticator {
     }
     @Override
     public boolean requiresUser() {
-        logger.debug("requiresUser called ... returning true");
+        logger.info("requiresUser called ... returning true");
         return true;
     }
     @Override
     public boolean configuredFor(KeycloakSession session, RealmModel realm, UserModel user) {
-        logger.debug("configuredFor called ... session=" + session + ", realm=" + realm + ", user=" + user);
+        logger.info("configuredFor called ... session=" + session + ", realm=" + realm + ", user=" + user);
         return true;
     }
 
     @Override
     public void setRequiredActions(KeycloakSession session, RealmModel realm, UserModel user) {
-        logger.debug("setRequiredActions called ... session=" + session + ", realm=" + realm + ", user=" + user);
+        logger.info("setRequiredActions called ... session=" + session + ", realm=" + realm + ", user=" + user);
     }
     @Override
     public void close() {
-        logger.debug("close called ...");
+        logger.info("close called ...");
     }
 
 }

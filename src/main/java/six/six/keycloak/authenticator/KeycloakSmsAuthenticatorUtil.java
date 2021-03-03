@@ -3,15 +3,14 @@ package six.six.keycloak.authenticator;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import org.jboss.logging.Logger;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.RequiredActionContext;
 import org.keycloak.models.AuthenticatorConfigModel;
+import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.UserModel;
 import org.keycloak.theme.Theme;
-import org.keycloak.theme.ThemeProvider;
 import six.six.gateway.Gateways;
 import six.six.gateway.SMSService;
 import six.six.gateway.aws.snsclient.SnsNotificationService;
@@ -125,7 +124,7 @@ public class KeycloakSmsAuthenticatorUtil {
 
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         try {
-            Phonenumber.PhoneNumber phone = phoneUtil.parse(mobileNumber, null);
+            PhoneNumber phone = phoneUtil.parse(mobileNumber, null);
             mobileNumber = phoneUtil.format(phone,
                     PhoneNumberUtil.PhoneNumberFormat.E164);
         } catch (NumberParseException e) {
@@ -137,29 +136,51 @@ public class KeycloakSmsAuthenticatorUtil {
 
 
     public static String getMessage(AuthenticationFlowContext context, String key){
-        String result=null;
         try {
-            ThemeProvider themeProvider = context.getSession().getProvider(ThemeProvider.class, "extending");
-            Theme currentTheme = themeProvider.getTheme(context.getRealm().getLoginTheme(), Theme.Type.LOGIN);
-            Locale locale = context.getSession().getContext().resolveLocale(context.getUser());
-            result = currentTheme.getMessages(locale).getProperty(key);
-        }catch (IOException e){
-            logger.warn(key + "not found in messages");
+            KeycloakSession session = context.getSession();
+            UserModel user = context.getUser();
+            Theme theme = session.theme().getTheme(Theme.Type.LOGIN);
+
+            if (user == null) {
+                throw new NullPointerException("User is null");
+            }
+
+            if (theme == null) {
+                throw new NullPointerException("Login Theme is null");
+            }
+
+            Locale locale = session.getContext().resolveLocale(user);
+            return theme.getMessages(locale).getProperty(key);
+        } catch (IOException e){
+            logger.warnf("%s not found in messages", key);
+        } catch (Exception ex) {
+            logger.errorf(ex, "The error occurs during getMessage call. %s", ex.getMessage());
         }
-        return result;
+        return key;
     }
 
     public static String getMessage(RequiredActionContext context, String key){
-        String result=null;
         try {
-            ThemeProvider themeProvider = context.getSession().getProvider(ThemeProvider.class, "extending");
-            Theme currentTheme = themeProvider.getTheme(context.getRealm().getLoginTheme(), Theme.Type.LOGIN);
-            Locale locale = context.getSession().getContext().resolveLocale(context.getUser());
-            result = currentTheme.getMessages(locale).getProperty(key);
-        }catch (IOException e){
-            logger.warn(key + "not found in messages");
+            KeycloakSession session = context.getSession();
+            UserModel user = context.getUser();
+            Theme theme = session.theme().getTheme(Theme.Type.LOGIN);
+
+            if (user == null) {
+                throw new NullPointerException("User is null");
+            }
+
+            if (theme == null) {
+                throw new NullPointerException("Login Theme is null");
+            }
+
+            Locale locale = session.getContext().resolveLocale(user);
+            return theme.getMessages(locale).getProperty(key);
+        } catch (IOException e){
+            logger.warnf("%s not found in messages", key);
+        } catch (Exception ex) {
+            logger.errorf(ex, "The error occurs during getMessage call. %s", ex.getMessage());
         }
-        return result;
+        return key;
     }
 
 

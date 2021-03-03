@@ -1,5 +1,6 @@
 package six.six.keycloak.authenticator.credential;
 
+import org.jboss.logging.Logger;
 import org.keycloak.common.util.Time;
 import org.keycloak.credential.*;
 import org.keycloak.models.KeycloakSession;
@@ -22,6 +23,8 @@ public class KeycloakSmsAuthenticatorCredentialProvider implements CredentialPro
     private static final String CACHE_KEY = KeycloakSmsAuthenticatorCredentialProvider.class.getName() + "." + KeycloakSmsConstants.USR_CRED_MDL_SMS_CODE;
 
     private final KeycloakSession session;
+
+    private static Logger logger = Logger.getLogger(KeycloakSmsAuthenticatorCredentialProvider.class);
 
     public KeycloakSmsAuthenticatorCredentialProvider(KeycloakSession session) {
         this.session = session;
@@ -107,5 +110,45 @@ public class KeycloakSmsAuthenticatorCredentialProvider implements CredentialPro
         if (!creds.isEmpty()) {
             user.getCachedWith().put(CACHE_KEY, creds.get(0));
         }
+    }
+
+    private UserCredentialStore getCredentialStore() {
+        return this.session.userCredentialManager();
+    }
+
+    @Override
+    public String getType() {
+        return KeycloakSmsConstants.USR_CRED_MDL_SMS_CODE;
+    }
+
+    @Override
+    public CredentialModel createCredential(RealmModel realm, UserModel user, CredentialModel credentialModel) {
+        if (credentialModel.getCreatedDate() == null) {
+            credentialModel.setCreatedDate(Time.currentTimeMillis());
+        }
+        return this.getCredentialStore().createCredential(realm, user, credentialModel);
+    }
+
+    @Override
+    public boolean deleteCredential(RealmModel realm, UserModel user, String credentialId) {
+        return this.getCredentialStore().removeStoredCredential(realm, user, credentialId);
+    }
+
+    @Override
+    public CredentialModel getCredentialFromModel(CredentialModel credentialModel) {
+        logger.infof("CredentialModel: %s", credentialModel);
+        return credentialModel;
+    }
+
+    @Override
+    public CredentialTypeMetadata getCredentialTypeMetadata(CredentialTypeMetadataContext credentialTypeMetadataContext) {
+        return CredentialTypeMetadata.builder()
+                .type(this.getType())
+                .category(CredentialTypeMetadata.Category.TWO_FACTOR)
+                .displayName("otp-display-name")
+                .helpText("otp-help-text")
+                .iconCssClass("kcAuthenticatorOTPClass")
+                .removeable(true)
+                .build(this.session);
     }
 }
