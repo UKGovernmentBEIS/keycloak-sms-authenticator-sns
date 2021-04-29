@@ -1,0 +1,42 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  reviewers:
+  - tom-bell-softwire
+  - broder
+  - jasiekmiko
+  ignore:
+  - dependency-name: com.amazonaws:aws-java-sdk-sns
+    versions:
+    - "> 1.11.548, < 1.12"
+  - dependency-name: org.wildfly.bom:wildfly
+    versions:
+    - 22.0.0.Final
+    - 22.0.1.Final
+    - 23.0.0.Final
+    - 23.0.1.Final
+  - dependency-name: com.googlecode.libphonenumber:libphonenumber
+    versions:
+    - 8.12.17
+    - 8.12.18
+    - 8.12.19
+    - 8.12.20
+  - dependency-name: org.keycloak:keycloak-services
+    versions:
+    - 12.0.2
+    - 12.0.3
+  - dependency-name: org.keycloak:keycloak-server-spi-private
+    versions:
+    - 12.0.2
+    - 12.0.3
+  - dependency-name: org.keycloak.bom:keycloak-spi-bom
+    versions:
+    - 12.0.2
+    - 12.0.3
+  - dependency-name: uk.gov.service.notify:notifications-java-client
+    versions:
+    - 3.17.0-RELEASE
